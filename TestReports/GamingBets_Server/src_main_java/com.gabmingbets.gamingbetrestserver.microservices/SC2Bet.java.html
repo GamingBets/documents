@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>SC2Bet.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">SC2Bet.java</span></div><h1>SC2Bet.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+public class SC2Bet {
+
+	private int available_bet_id;
+	private int user_id;
+	private int betted_result;
+
+	public SC2Bet(int match_id, int user_id, int betted_result) {
+<span class="nc" id="L10">		super();</span>
+<span class="nc" id="L11">		this.available_bet_id = match_id;</span>
+<span class="nc" id="L12">		this.user_id = user_id;</span>
+<span class="nc" id="L13">		this.betted_result = betted_result;</span>
+<span class="nc" id="L14">	}</span>
+
+	public int getAvailable_bet_id() {
+<span class="nc" id="L17">		return available_bet_id;</span>
+	}
+
+	public void setAvailable_bet_id(int available_bet_id) {
+<span class="nc" id="L21">		this.available_bet_id = available_bet_id;</span>
+<span class="nc" id="L22">	}</span>
+
+	public int getUser_id() {
+<span class="nc" id="L25">		return user_id;</span>
+	}
+
+	public void setUser_id(int user_id) {
+<span class="nc" id="L29">		this.user_id = user_id;</span>
+<span class="nc" id="L30">	}</span>
+
+	public int getBetted_result() {
+<span class="nc" id="L33">		return betted_result;</span>
+	}
+
+	public void setBetted_result(int betted_result) {
+<span class="nc" id="L37">		this.betted_result = betted_result;</span>
+<span class="nc" id="L38">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

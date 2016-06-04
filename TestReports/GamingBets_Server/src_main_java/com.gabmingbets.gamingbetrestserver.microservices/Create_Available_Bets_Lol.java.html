@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Create_Available_Bets_Lol.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">Create_Available_Bets_Lol.java</span></div><h1>Create_Available_Bets_Lol.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.sql.*;
+
+public class Create_Available_Bets_Lol {
+
+	private Date dateOfLastExecute;
+	private Connection con;
+
+<span class="fc" id="L10">	public Create_Available_Bets_Lol() {</span>
+<span class="fc" id="L11">		dateOfLastExecute = getDateOfLastExecuteFromDB();</span>
+<span class="fc" id="L12">		this.con = Database.connect();</span>
+<span class="fc" id="L13">	}</span>
+
+	public void run() {
+		// Get dateOfLastExecute
+
+		// Query for LoL Matches with bet_created flag = 0
+<span class="fc" id="L19">		String query = createSelectQuery();</span>
+		PreparedStatement stmt;
+		try {
+<span class="fc" id="L22">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L23">			ResultSet rs = stmt.executeQuery();</span>
+<span class="fc" id="L24">			int i = 0;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">			while (rs.next()) {</span>
+				
+<span class="fc" id="L27">				stmt = con.prepareStatement(createInsertQuery(rs.getInt(&quot;idmatches&quot;)));</span>
+<span class="fc" id="L28">				stmt.executeUpdate();</span>
+				
+				
+<span class="fc" id="L31">				stmt = con.prepareStatement(createUpdateQuery(rs.getInt(&quot;idmatches&quot;)));</span>
+<span class="fc" id="L32">				stmt.executeUpdate();</span>
+				
+<span class="fc" id="L34">				i++;</span>
+				 
+			}
+<span class="fc" id="L37">                        this.con.close();</span>
+<span class="fc" id="L38">                        stmt.close();</span>
+<span class="fc" id="L39">                        con.close();</span>
+<span class="fc" id="L40">		System.out.println(i+&quot; rows affected!&quot;);</span>
+<span class="fc" id="L41">		System.out.println(&quot;Finished!&quot;);</span>
+                
+<span class="nc" id="L43">		} catch (SQLException e) {</span>
+			//TODO Exception Handling
+<span class="nc" id="L45">			e.printStackTrace();</span>
+<span class="fc" id="L46">		}</span>
+               
+
+<span class="fc" id="L49">	}</span>
+
+	private void resetTimer() {
+<span class="nc" id="L52">		dateOfLastExecute = new Date(System.currentTimeMillis());</span>
+<span class="nc" id="L53">	}</span>
+
+	private Date getDateOfLastExecuteFromDB() {
+<span class="fc" id="L56">		return new Date(System.currentTimeMillis());</span>
+	}
+
+	public String createSelectQuery() {
+<span class="fc" id="L60">		return &quot;SELECT * FROM gamingbets.lol_matches WHERE bet_created = 0;&quot;;</span>
+	}
+
+	public String createInsertQuery(int id) {
+<span class="fc" id="L64">		return &quot;INSERT INTO `gamingbets`.`lol_available_bets` (`match_id`) VALUES ('&quot;+id+&quot;');&quot;;</span>
+
+	}
+
+	public String createUpdateQuery(int id) {
+<span class="fc" id="L69">		return &quot;UPDATE `GamingBets`.`lol_matches` SET `bet_created`='1' WHERE `idmatches`='&quot;+id+&quot;';&quot;;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

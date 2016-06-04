@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Sc2Maps.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain</a> &gt; <span class="el_source">Sc2Maps.java</span></div><h1>Sc2Maps.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Andre
+ */
+@Entity
+@Table(name = &quot;sc2_maps&quot;)
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = &quot;Sc2Maps.findAll&quot;, query = &quot;SELECT s FROM Sc2Maps s&quot;),
+    @NamedQuery(name = &quot;Sc2Maps.findByIdmaps&quot;, query = &quot;SELECT s FROM Sc2Maps s WHERE s.idmaps = :idmaps&quot;),
+    @NamedQuery(name = &quot;Sc2Maps.findByName&quot;, query = &quot;SELECT s FROM Sc2Maps s WHERE s.name = :name&quot;)})
+public class Sc2Maps implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;idmaps&quot;)
+    private Integer idmaps;
+    @Size(max = 45)
+    @Column(name = &quot;name&quot;)
+    private String name;
+
+<span class="nc" id="L44">    public Sc2Maps() {</span>
+<span class="nc" id="L45">    }</span>
+
+<span class="nc" id="L47">    public Sc2Maps(Integer idmaps) {</span>
+<span class="nc" id="L48">        this.idmaps = idmaps;</span>
+<span class="nc" id="L49">    }</span>
+
+    public Integer getIdmaps() {
+<span class="nc" id="L52">        return idmaps;</span>
+    }
+
+    public void setIdmaps(Integer idmaps) {
+<span class="nc" id="L56">        this.idmaps = idmaps;</span>
+<span class="nc" id="L57">    }</span>
+
+    public String getName() {
+<span class="nc" id="L60">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L64">        this.name = name;</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L69">        int hash = 0;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        hash += (idmaps != null ? idmaps.hashCode() : 0);</span>
+<span class="nc" id="L71">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!(object instanceof Sc2Maps)) {</span>
+<span class="nc" id="L78">            return false;</span>
+        }
+<span class="nc" id="L80">        Sc2Maps other = (Sc2Maps) object;</span>
+<span class="nc bnc" id="L81" title="All 8 branches missed.">        if ((this.idmaps == null &amp;&amp; other.idmaps != null) || (this.idmaps != null &amp;&amp; !this.idmaps.equals(other.idmaps))) {</span>
+<span class="nc" id="L82">            return false;</span>
+        }
+<span class="nc" id="L84">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L89">        return &quot;com.gabmingbets.gamingbetrestserver.domain.Sc2Maps[ idmaps=&quot; + idmaps + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

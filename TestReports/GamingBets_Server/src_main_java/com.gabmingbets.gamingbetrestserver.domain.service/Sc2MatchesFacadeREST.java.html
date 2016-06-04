@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Sc2MatchesFacadeREST.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain.service</a> &gt; <span class="el_source">Sc2MatchesFacadeREST.java</span></div><h1>Sc2MatchesFacadeREST.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain.service;
+
+import com.gabmingbets.gamingbetrestserver.domain.Sc2Bet;
+import com.gabmingbets.gamingbetrestserver.domain.Sc2Matches;
+import com.gabmingbets.gamingbetrestserver.microservices.MicroserviceHandler;
+
+import java.util.Iterator;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+/**
+ *
+ * @author Andre
+ */
+@Stateless
+@Path(&quot;sc2matches&quot;)
+public class Sc2MatchesFacadeREST extends AbstractFacade&lt;Sc2Matches&gt; {
+
+    @PersistenceContext(unitName = &quot;com.gabmingbets_gamingBetRestServer_war_1.0PU&quot;)
+    private EntityManager em;
+
+    public Sc2MatchesFacadeREST() {
+<span class="nc" id="L40">        super(Sc2Matches.class);</span>
+<span class="nc" id="L41">    }</span>
+
+    @POST
+    @Override
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void create(Sc2Matches entity) {
+<span class="nc" id="L47">        super.create(entity);</span>
+<span class="nc" id="L48">    }</span>
+
+    @PUT
+    @Path(&quot;{id}&quot;)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void edit(@PathParam(&quot;id&quot;) Integer id, Sc2Matches entity) {
+<span class="nc" id="L54">        super.edit(entity);</span>
+<span class="nc" id="L55">    }</span>
+
+    @DELETE
+    @Path(&quot;{id}&quot;)
+    public void remove(@PathParam(&quot;id&quot;) Integer id) {
+<span class="nc" id="L60">        super.remove(super.find(id));</span>
+<span class="nc" id="L61">    }</span>
+
+    @GET
+    @Path(&quot;{id}&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Sc2Matches find(@PathParam(&quot;id&quot;) Integer id) {
+<span class="nc" id="L67">        return super.find(id);</span>
+    }
+    
+    @GET
+    @Path(&quot;newsFeed&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public List&lt;Sc2Matches&gt; getNewsFeed(){
+<span class="nc" id="L74">    	TypedQuery&lt;Sc2Matches&gt; query = getEntityManager().createNamedQuery(&quot;Sc2Matches.findNewsFeed&quot;, Sc2Matches.class);</span>
+<span class="nc" id="L75">        return query.getResultList();</span>
+    	
+    }
+
+    @GET
+    @Override
+    @Produces({MediaType.APPLICATION_JSON})
+    public List&lt;Sc2Matches&gt; findAll() {
+<span class="nc" id="L83">        return super.findAll();</span>
+    }
+
+    @GET
+    @Path(&quot;{from}/{to}&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public List&lt;Sc2Matches&gt; findRange(@PathParam(&quot;from&quot;) Integer from, @PathParam(&quot;to&quot;) Integer to) {
+<span class="nc" id="L90">        return super.findRange(new int[]{from, to});</span>
+    }
+
+    @GET
+    @Path(&quot;count&quot;)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String countREST() {
+<span class="nc" id="L97">        return String.valueOf(super.count());</span>
+    }
+    
+    
+    
+    @GET
+    @Path(&quot;createBets&quot;)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createBets(){
+    	
+<span class="nc" id="L107">       	StringBuilder temp = new StringBuilder(&quot;Create Bets!:\n&quot;);</span>
+<span class="nc" id="L108">    	temp.append(&quot;Before:\n&quot;);</span>
+    	
+<span class="nc" id="L110">    	TypedQuery&lt;Sc2Matches&gt; query = getEntityManager().createNamedQuery(&quot;Sc2Matches.findByBetCreated&quot;, Sc2Matches.class).setParameter(&quot;betCreated&quot;, 0);</span>
+<span class="nc" id="L111">    	List&lt;Sc2Matches&gt; list = query.getResultList();</span>
+    	
+<span class="nc bnc" id="L113" title="All 2 branches missed.">    	for (Iterator iterator = list.iterator(); iterator.hasNext();) {</span>
+<span class="nc" id="L114">			Sc2Matches sc2Matches = (Sc2Matches) iterator.next();</span>
+<span class="nc" id="L115">			temp.append(sc2Matches.toString() + &quot;\n&quot;);</span>
+<span class="nc" id="L116">		}</span>
+    	
+<span class="nc" id="L118">    	MicroserviceHandler.createAvailableBetsSC2();</span>
+    	
+<span class="nc" id="L120">    	temp.append(&quot;After:\n&quot;);</span>
+<span class="nc" id="L121">    	query = getEntityManager().createNamedQuery(&quot;Sc2Matches.findByBetCreated&quot;, Sc2Matches.class).setParameter(&quot;betCreated&quot;, 0);</span>
+<span class="nc" id="L122">    	list = query.getResultList();</span>
+    	
+<span class="nc bnc" id="L124" title="All 2 branches missed.">    	for (Iterator iterator = list.iterator(); iterator.hasNext();) {</span>
+<span class="nc" id="L125">			Sc2Matches sc2Matches = (Sc2Matches) iterator.next();</span>
+<span class="nc" id="L126">			temp.append(sc2Matches.toString() + &quot;\n&quot;);</span>
+<span class="nc" id="L127">		}</span>
+    	
+<span class="nc" id="L129">    	return temp.toString();</span>
+    	
+    }
+    
+    @GET
+    @Path(&quot;evaluateBets&quot;)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String evaluateBets(){
+    	
+<span class="nc" id="L138">       	StringBuilder temp = new StringBuilder(&quot;Evaluate Bets!:\n&quot;);</span>
+<span class="nc" id="L139">    	temp.append(&quot;Before:\n&quot;);</span>
+    	
+    	//TypedQuery&lt;Sc2Matches&gt; query = getEntityManager().createNamedQuery(&quot;Sc2Matches.findByFinished&quot;, Sc2Matches.class).setParameter(&quot;finished&quot;, 1);
+<span class="nc" id="L142">    	TypedQuery&lt;Sc2Bet&gt; query = getEntityManager().createNamedQuery(&quot;Sc2Bet.findAllMatchEndedNotEvaluated&quot;, Sc2Bet.class); </span>
+<span class="nc" id="L143">    	List&lt;Sc2Bet&gt; list = query.getResultList();</span>
+    	
+<span class="nc bnc" id="L145" title="All 2 branches missed.">    	for (Sc2Bet sc2Bet : list) {</span>
+<span class="nc" id="L146">			temp.append(sc2Bet.toString()+&quot;\n&quot;);</span>
+<span class="nc" id="L147">		}</span>
+    	
+<span class="nc" id="L149">    	MicroserviceHandler.evaluateBetsSC2();</span>
+    	
+<span class="nc" id="L151">    	temp.append(&quot;After:\n&quot;);</span>
+<span class="nc" id="L152">    	query = getEntityManager().createNamedQuery(&quot;Sc2Bet.findAllMatchEndedNotEvaluated&quot;, Sc2Bet.class); </span>
+<span class="nc" id="L153">    	list = query.getResultList();</span>
+    	
+<span class="nc bnc" id="L155" title="All 2 branches missed.">    	for (Sc2Bet sc2Bet : list) {</span>
+<span class="nc" id="L156">			temp.append(sc2Bet.toString()+&quot;\n&quot;);</span>
+<span class="nc" id="L157">		}</span>
+    	
+<span class="nc" id="L159">    	return temp.toString();</span>
+    	
+    }
+  
+
+	
+    @Override
+    protected EntityManager getEntityManager() {
+<span class="nc" id="L167">        return em;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

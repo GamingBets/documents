@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>MicroserviceHandler.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">MicroserviceHandler.java</span></div><h1>MicroserviceHandler.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.util.List;
+
+import com.gabmingbets.gamingbetrestserver.domain.service.Sc2MatchesFacadeREST;
+
+<span class="nc" id="L7">public class MicroserviceHandler {</span>
+
+	// ############## STARCRAFT 2 ###################
+
+	public static void createAvailableBetsSC2() {
+<span class="fc" id="L12">		Create_Available_Bets_SC2 cab = new Create_Available_Bets_SC2();</span>
+<span class="fc" id="L13">		cab.run();</span>
+<span class="fc" id="L14">	}</span>
+
+	public static void evaluateBetsSC2() {
+<span class="fc" id="L17">		Evaluate_Bet_SC2 eb = new Evaluate_Bet_SC2();</span>
+<span class="fc" id="L18">		eb.run();</span>
+<span class="fc" id="L19">	}</span>
+
+	public static void adjustScoreSC2() {
+<span class="fc" id="L22">		AdjustScoreSC2 as = new AdjustScoreSC2();</span>
+<span class="fc" id="L23">		as.run();</span>
+<span class="fc" id="L24">	}</span>
+
+	// ############ League of Legends ###############
+
+	public static void createAvailableBetsLoL() {
+<span class="fc" id="L29">		Create_Available_Bets_Lol cab = new Create_Available_Bets_Lol();</span>
+<span class="fc" id="L30">		cab.run();</span>
+<span class="fc" id="L31">	}</span>
+
+	public static void evaluateBetsLol() {
+<span class="fc" id="L34">		Evaluate_Bet_Lol eb = new Evaluate_Bet_Lol();</span>
+<span class="fc" id="L35">		eb.run();</span>
+<span class="fc" id="L36">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

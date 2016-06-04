@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AdjustScoreSC2.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">AdjustScoreSC2.java</span></div><h1>AdjustScoreSC2.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import com.gabmingbets.gamingbetrestserver.domain.Sc2Bet;
+import com.gabmingbets.gamingbetrestserver.domain.User;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+<span class="fc" id="L16">public class AdjustScoreSC2 {</span>
+    
+    @PersistenceContext(unitName = &quot;com.gabmingbets_gamingBetRestServer_war_1.0PU&quot;)
+    private EntityManager em;
+    
+public void run() {
+	/*	
+    TypedQuery&lt;Sc2Bet&gt; query = em.createNamedQuery(&quot;Sc2Bet.findByProcessed&quot;, Sc2Bet.class).setParameter(&quot;processed&quot;, em);
+    List&lt;Sc2Bet&gt; bets = new ArrayList();
+    int counter = 0;
+    bets = query.getResultList();
+    
+    for(int i = 0; i &lt; bets.size(); i++) {
+        if(bets.get(i).getStatus()==3) {
+            int score_adjust = 0;
+            if(bets.get(i).getInput()==0) {
+                score_adjust = 10;
+            }else {
+                score_adjust = bets.get(i).getInput();
+                score_adjust *= 3;
+            }
+            TypedQuery&lt;User&gt; query2 = em.createNamedQuery(&quot;User.findById&quot;, User.class).setParameter(&quot;id&quot;, bets.get(i).getUserId());
+            User user = query2.getSingleResult();
+            
+            score_adjust += user.getScore();
+            
+            Query q = em.createQuery(&quot;UPDATE User u SET u.score = &quot; + score_adjust + &quot;WHERE u.id=&quot; + user.getId() +&quot;&quot;);
+            q.executeUpdate();
+        }
+        Query q = em.createQuery(&quot;UPDATE Sc2Bet b SET b.processed = 1 WHERE b.idsc2Bet = &quot; + bets.get(i).getIdsc2Bet() + &quot;&quot;);
+        q.executeUpdate();
+        
+        counter++;
+    }
+    System.out.println(&quot;&quot;+counter+&quot; scores were updated!&quot;);*/
+	
+	
+		String query;
+		PreparedStatement stmt;
+		ResultSet rs;
+<span class="fc" id="L56">		Connection con = Database.connect();</span>
+<span class="fc" id="L57">		int counter = 0;</span>
+		// Check if there are bets which corresponding matches ended but the
+		// bets weren�t evaluated!
+		try {
+<span class="fc" id="L61">			query = &quot;SELECT b.user_id, u.score, b.idsc2_bet, b.status, b.input FROM gamingbets.sc2_bet b, user u WHERE processed = 0 and b.user_id = u.iD;&quot;;</span>
+<span class="fc" id="L62">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L63">			rs = stmt.executeQuery();</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">				if (rs.getInt(&quot;status&quot;) == 3) {</span>
+
+					// Get The Right Score
+<span class="fc" id="L69">					int score_adjust = 0;</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">					if (rs.getInt(&quot;input&quot;) == 0) {</span>
+<span class="fc" id="L71">						score_adjust = 10;</span>
+					} else {
+<span class="nc" id="L73">						score_adjust = rs.getInt(&quot;input&quot;);</span>
+<span class="nc" id="L74">						score_adjust = score_adjust * 3;</span>
+					}
+
+<span class="fc" id="L77">					query = &quot;SELECT * FROM gamingbets.user u WHERE u.iD = &quot; + rs.getInt(&quot;user_id&quot;) + &quot;;&quot;;</span>
+<span class="fc" id="L78">					stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L79">					ResultSet temp = stmt.executeQuery();</span>
+<span class="fc" id="L80">					temp.next();</span>
+
+<span class="fc" id="L82">					query = &quot;UPDATE `gamingbets`.`user` SET `score`='&quot; + (temp.getInt(&quot;score&quot;) + score_adjust)</span>
+<span class="fc" id="L83">							+ &quot;' WHERE `iD`='&quot; + rs.getInt(&quot;user_id&quot;) + &quot;';&quot;;</span>
+<span class="fc" id="L84">					stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L85">					stmt.executeUpdate();</span>
+				}
+<span class="fc" id="L87">				query = &quot;UPDATE `gamingbets`.`sc2_bet` SET `processed`='1' WHERE `idsc2_bet`='&quot; + rs.getInt(&quot;idsc2_bet&quot;)</span>
+						+ &quot;';&quot;;
+<span class="fc" id="L89">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L90">				stmt.executeUpdate();</span>
+<span class="fc" id="L91">				counter++;</span>
+
+				
+			}
+<span class="fc" id="L95">			stmt.close();</span>
+<span class="fc" id="L96">			con.close();</span>
+<span class="nc" id="L97">		} catch (SQLException e) {</span>
+<span class="nc" id="L98">			e.printStackTrace();</span>
+
+<span class="fc" id="L100">		}</span>
+<span class="fc" id="L101">		System.out.println(&quot;&quot; + counter + &quot; scores were updated!&quot;);</span>
+		
+<span class="fc" id="L103">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

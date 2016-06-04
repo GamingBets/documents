@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ProductionTestParseSC2Data.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (02.06.2016 23:27:57)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">ProductionTestParseSC2Data.java</span></div><h1>ProductionTestParseSC2Data.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+<span class="nc" id="L8">public class ProductionTestParseSC2Data {</span>
+
+	public static void main(String[] args) {
+<span class="nc" id="L11">		String player1 = &quot;iAsonu&quot;;</span>
+<span class="nc" id="L12">		String player2 = &quot;Harstem&quot;;</span>
+<span class="nc" id="L13">		String tournament = &quot;http://wiki.teamliquid.net/starcraft2/2016_WCS_Spring_Circuit_Championship&quot;;</span>
+		
+<span class="nc" id="L15">		ArrayList&lt;SC2Match&gt; list = GetSC2Data.getMatchesFromTournament(tournament);</span>
+		
+<span class="nc" id="L17">		System.out.println(&quot;\n\n--------------------------------\nSC2Match Objects:\n\n&quot;);</span>
+<span class="nc bnc" id="L18" title="All 2 branches missed.">		for (SC2Match sc2Match : list) {</span>
+<span class="nc" id="L19">			System.out.println(sc2Match.toString());</span>
+		}
+		
+		// StringBuilder result = new StringBuilder();
+		// GetSC2Data.parseByTournament(&quot;Gold_Series_International_2016&quot;);
+		// System.out.println(GetSC2Data.updateURL(&quot;Snute&quot;, &quot;Harstem&quot;,
+		// &quot;Gold_Series_International_2016&quot;));
+		// GetSC2Data.parseByTournamentAndPlayer(&quot;Snute&quot;, &quot;Harstem&quot;,
+		// &quot;Gold_Series_International_2016&quot;);
+		// BufferedReader reader = null;
+		// try {
+		// reader = new BufferedReader(new FileReader(&quot;sc2apichache.txt&quot;));
+		// String line;
+		// while ((line = reader.readLine()) != null) {
+		// result.append(line);
+		// }
+		// reader.close();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// System.out.println(&quot;Read from file:\n&quot;+result);
+		//
+		// System.out.println(GetSC2Data.parseResponseStringToJSONObject(result.toString()));
+
+<span class="nc" id="L44">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (02.06.2016 23:27:57)</div></body></html>

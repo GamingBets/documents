@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GetSC2Data.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">GetSC2Data.java</span></div><h1>GetSC2Data.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
+import org.json.*;
+
+<span class="nc" id="L13">public class GetSC2Data {</span>
+
+	public static String updateURL(String player1, String player2, String tournament) {
+		String url;
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">		if (player1 == null) {</span>
+<span class="nc" id="L18">			player1 = &quot;%2b&quot;;</span>
+		}
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">		if (player2 == null) {</span>
+<span class="nc" id="L21">			player2 = &quot;%2b&quot;;</span>
+		}
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">		if (tournament == null) {</span>
+<span class="nc" id="L24">			tournament = &quot;%2b&quot;;</span>
+		}
+<span class="fc" id="L26">		url = &quot;http://wiki.teamliquid.net/starcraft2/api.php?action=askargs&amp;conditions=has_tournament::&quot; + tournament</span>
+<span class="fc" id="L27">				+ &quot;|has_player_left::&quot; + player1 + &quot;|has_player_right::&quot; + player2</span>
+<span class="fc" id="L28">				+ &quot;&amp;printouts=has_player_left|has_player_right|has_tournament|has_player_left_score|has_player_right_score&amp;parameters=offset%3D0|limit%3D100&amp;format=json&quot;;</span>
+<span class="fc" id="L29">		return url;</span>
+	}
+
+	public static String updateURL(String tournament) {
+		String url;
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">		if (tournament == null) {</span>
+<span class="nc" id="L35">			tournament = &quot;%2b&quot;;</span>
+		}
+<span class="fc" id="L37">		url = &quot;http://wiki.teamliquid.net/starcraft2/api.php?action=askargs&amp;conditions=has_tournament::&quot; + tournament</span>
+<span class="fc" id="L38">				+ &quot;|has_player_left::%2b|has_player_right::%2b&amp;printouts=has_player_left|has_player_right|has_tournament|has_player_left_score|has_player_right_score&amp;parameters=offset%3D0|limit%3D100&amp;format=json&quot;;</span>
+<span class="fc" id="L39">		return url;</span>
+	}
+
+	public static String excutePost(String targetURL) {
+
+<span class="nc" id="L44">		HttpURLConnection connection = null;</span>
+<span class="nc" id="L45">		StringBuilder response = null;</span>
+
+		try {
+			// Create connection
+<span class="nc" id="L49">			URL url = new URL(targetURL);</span>
+<span class="nc" id="L50">			connection = (HttpURLConnection) url.openConnection();</span>
+<span class="nc" id="L51">			connection.setRequestMethod(&quot;POST&quot;);</span>
+<span class="nc" id="L52">			connection.setRequestProperty(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded;charset=utf-8&quot;);</span>
+<span class="nc" id="L53">			connection.setRequestProperty(&quot;User-Agent&quot;, &quot;GamingBetsServer, felixmorsbach@web.de&quot;);</span>
+			// connection.setRequestProperty(&quot;Content-Length&quot;,
+			// Integer.toString(urlParameters.getBytes().length));
+			// connection.setRequestProperty(&quot;Content-Language&quot;, &quot;en-US&quot;);
+<span class="nc" id="L57">			connection.setRequestProperty(&quot;Accept-Charset&quot;, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L58">			connection.setRequestProperty(&quot;Accept-Encoding&quot;, &quot;gzip&quot;);</span>
+<span class="nc" id="L59">			connection.setUseCaches(false);</span>
+<span class="nc" id="L60">			connection.setDoOutput(true);</span>
+
+			// Send request
+<span class="nc" id="L63">			OutputStream wr = connection.getOutputStream();</span>
+<span class="nc" id="L64">			wr.write(targetURL.getBytes(&quot;UTF-8&quot;));</span>
+<span class="nc" id="L65">			wr.close();</span>
+
+			// Get Response
+<span class="nc" id="L68">			Reader reader = null;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">			if (&quot;gzip&quot;.equals(connection.getContentEncoding())) {</span>
+<span class="nc" id="L70">				reader = new InputStreamReader(new GZIPInputStream(connection.getInputStream()));</span>
+<span class="nc" id="L71">			} else {</span>
+<span class="nc" id="L72">				reader = new InputStreamReader(connection.getInputStream());</span>
+			}
+
+			// Print out Response Code
+<span class="nc" id="L76">			int status = connection.getResponseCode();</span>
+<span class="nc" id="L77">			System.out.println(&quot;Response Code: &quot; + status);</span>
+
+			// Print out Header Fields
+
+			// for (Entry&lt;String, List&lt;String&gt;&gt; header :
+			// connection.getHeaderFields().entrySet()) {
+			// System.out.println(header.getKey() + &quot;=&quot; + header.getValue());
+			// }
+
+			// GetResponse
+<span class="nc" id="L87">			response = new StringBuilder();</span>
+<span class="nc" id="L88">			System.out.println(&quot;Output From \&quot;executePost\&quot;:\n&quot;);</span>
+<span class="nc" id="L89">			while (true) {</span>
+<span class="nc" id="L90">				int ch = reader.read();</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">				if (ch == -1) {</span>
+<span class="nc" id="L92">					break;</span>
+				}
+<span class="nc" id="L94">				response.append((char) ch);</span>
+<span class="nc" id="L95">				System.out.print((char) ch);</span>
+			}
+<span class="nc" id="L97">			System.out.println();</span>
+
+<span class="nc" id="L99">		} catch (Exception e) {</span>
+<span class="nc" id="L100">			e.printStackTrace();</span>
+<span class="nc" id="L101">			return null;</span>
+
+<span class="nc" id="L103">		} finally {</span>
+<span class="nc bnc" id="L104" title="All 6 branches missed.">			if (connection != null) {</span>
+<span class="nc" id="L105">				connection.disconnect();</span>
+			}
+<span class="nc" id="L107">		}</span>
+<span class="nc" id="L108">		return response.toString();</span>
+
+	}
+
+//	public static JSONObject parseResponseStringToJSONObject(String response) {
+//		JSONObject object = new JSONObject(response);
+//		object = object.getJSONObject(&quot;query&quot;);
+//		object = object.getJSONObject(&quot;results&quot;);
+//		String maps[] = JSONObject.getNames(object);
+//		String result_object_name = &quot;&quot;;
+//
+//		for (int i = 0; i &lt; maps.length; i++) {
+//			if (!maps[i].contains(&quot;Map&quot;)) {
+//				result_object_name = maps[i];
+//			}
+//
+//		}
+//		object = object.getJSONObject(result_object_name);
+//		object = object.getJSONObject(&quot;printouts&quot;);
+//
+//		JSONArray player1 = object.getJSONArray(&quot;has_player_right&quot;);
+//		JSONArray player2 = object.getJSONArray(&quot;has_player_left&quot;);
+//		JSONArray player1_score = object.getJSONArray(&quot;has_player_right_score&quot;);
+//		JSONArray player2_score = object.getJSONArray(&quot;has_player_left_score&quot;);
+//
+//		JSONArray tournament = object.getJSONArray(&quot;has_tournament&quot;);
+//		JSONObject tournament_text = tournament.getJSONObject(0);
+//		String tournament_full_text = tournament_text.getString(&quot;fulltext&quot;);
+//
+//		SC2Match match = new SC2Match();
+//		match.setTournament(tournament_full_text);
+//
+//		match.setPlayer1(player1.getString(0));
+//		match.setPlayer2(player2.getString(0));
+//
+//		int score = 0;
+//
+//		score = player1_score.getInt(0) * 10;
+//		score += player2_score.getInt(0);
+//
+//		match.setScore(score);
+//
+//		System.out.println(match.toString());
+//
+//		return object;
+//	}
+
+//	public static SC2Match parseByTournament(String tournament) {
+//		System.out.println(&quot;Testing!&quot;);
+//		System.out.println(excutePost(updateURL(null, null, tournament)));
+//
+//		return null;
+//	}
+//
+//	public static SC2Match parseByTournamentAndPlayer(String player1, String player2, String tournament) {
+		// JSONArray object =
+		// parseResponseStringToJSONObject((excutePost(updateURL(player1,
+		// player2, tournament))));
+		// SC2Match match = new SC2Match();
+		// System.out.println(object.get(1));
+//		return null;
+//
+//	}
+
+	
+	
+	
+	// Call this Method with an URL of a Liquipedia Tournament, and it will
+	// return you a list of all Matches!
+	public static ArrayList&lt;SC2Match&gt; getMatchesFromTournament(String url) {
+
+<span class="nc" id="L179">		ArrayList&lt;SC2Match&gt; list = new ArrayList&lt;SC2Match&gt;();</span>
+
+		// CutURLToTournamentIdentifier
+<span class="nc" id="L182">		url = url.substring(38);</span>
+
+		// Send an HTTP POST Request to Liquipedia
+		String httpResponse;
+<span class="nc" id="L186">		httpResponse = excutePost(updateURL(url));</span>
+		
+<span class="nc" id="L188">		System.out.println(&quot;httpResponse:\n&quot;+httpResponse+&quot;\n\n&quot;);</span>
+
+		// Extracts just the results
+<span class="nc" id="L191">		JSONObject json_matches = parseResponseToResultsAsJSONObject(httpResponse);</span>
+
+		// Filters Objects which describe only one map out of the List and
+		// invalid datasets
+<span class="nc" id="L195">		json_matches = filterMatches(json_matches);</span>
+
+		// TODO Order By Matches!
+
+<span class="nc" id="L199">		System.out.println(&quot;\n--------------------------\nOutput from \&quot;getMatchesFromTournament\&quot;:\n&quot;);</span>
+<span class="nc" id="L200">		System.out.println(json_matches);</span>
+<span class="nc" id="L201">		System.out.println();</span>
+
+		// Creates a SC2Match Object for each JSONObject
+<span class="nc" id="L204">		list = parseJSONMachtesToListOfSC2Machtes(json_matches);</span>
+
+<span class="nc" id="L206">		return list;</span>
+	}
+
+	public static ArrayList&lt;SC2Match&gt; parseJSONMachtesToListOfSC2Machtes(JSONObject json_matches) {
+
+<span class="nc" id="L211">		String maps[] = JSONObject.getNames(json_matches);</span>
+<span class="nc" id="L212">		ArrayList&lt;SC2Match&gt; list = new ArrayList&lt;SC2Match&gt;();</span>
+		SC2Match temp;
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">		for (int i = 0; i &lt; maps.length; i++) {</span>
+<span class="nc" id="L216">			temp = parseJSONObjectToSC2Match(json_matches.getJSONObject(maps[i]));</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">			if (temp != null) {</span>
+<span class="nc" id="L218">				list.add(temp);</span>
+			}
+		}
+
+<span class="nc" id="L222">		return list;</span>
+	}
+
+	private static JSONObject filterMatches(JSONObject json_matches) {
+
+<span class="nc" id="L227">		String maps[] = JSONObject.getNames(json_matches);</span>
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">		for (int i = 0; i &lt; maps.length; i++) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">			if (maps[i].contains(&quot;Map&quot;)/* || maps[i].contains(&quot;TBD&quot;)*/) {</span>
+<span class="nc" id="L231">				json_matches.remove(maps[i]);</span>
+			}
+
+		}
+<span class="nc" id="L235">		return json_matches;</span>
+
+	}
+
+	public static SC2Match parseJSONObjectToSC2Match(JSONObject each_object) {
+
+<span class="fc" id="L241">		SC2Match match = new SC2Match();</span>
+
+<span class="fc" id="L243">		each_object = each_object.getJSONObject(&quot;printouts&quot;);</span>
+
+<span class="fc" id="L245">		JSONArray player1 = each_object.getJSONArray(&quot;has_player_left&quot;);</span>
+<span class="fc" id="L246">		JSONArray player2 = each_object.getJSONArray(&quot;has_player_right&quot;);</span>
+<span class="fc" id="L247">		JSONArray player1_score = each_object.getJSONArray(&quot;has_player_left_score&quot;);</span>
+<span class="fc" id="L248">		JSONArray player2_score = each_object.getJSONArray(&quot;has_player_right_score&quot;);</span>
+<span class="fc" id="L249">		JSONArray json_tournament = each_object.getJSONArray(&quot;has_tournament&quot;);</span>
+
+<span class="fc" id="L251">		JSONObject a = json_tournament.getJSONObject(0);</span>
+<span class="fc" id="L252">		String tournament = a.getString(&quot;fulltext&quot;);</span>
+
+<span class="fc" id="L254">		match.setTournament(tournament);</span>
+
+<span class="pc bpc" id="L256" title="1 of 2 branches missed.">		if(player1.getString(0).equalsIgnoreCase(&quot;tbd&quot;) ||</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">				player2.getString(0).equalsIgnoreCase(&quot;tbd&quot;)){</span>
+<span class="nc" id="L258">			return null;</span>
+		}
+		
+<span class="fc" id="L261">		match.setPlayer1(player1.getString(0));</span>
+<span class="fc" id="L262">		match.setPlayer2(player2.getString(0));</span>
+
+<span class="fc" id="L264">		int score = 0;</span>
+
+<span class="fc" id="L266">		score = player1_score.getInt(0) * 10;</span>
+<span class="fc" id="L267">		score += player2_score.getInt(0);</span>
+
+<span class="fc" id="L269">		match.setScore(score);</span>
+
+<span class="fc" id="L271">		return match;</span>
+	}
+
+	private static JSONObject parseResponseToResultsAsJSONObject(String httpResponse) {
+
+<span class="nc" id="L276">		JSONObject object = new JSONObject(httpResponse);</span>
+<span class="nc" id="L277">		object = object.getJSONObject(&quot;query&quot;);</span>
+<span class="nc" id="L278">		object = object.getJSONObject(&quot;results&quot;);</span>
+<span class="nc" id="L279">		return object;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

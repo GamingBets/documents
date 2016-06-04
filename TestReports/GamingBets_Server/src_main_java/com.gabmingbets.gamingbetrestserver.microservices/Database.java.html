@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Database.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">Database.java</span></div><h1>Database.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by quint_000 on 05.11.2015.
+ */
+
+<span class="nc" id="L17">public class Database {</span>
+
+    public static Connection connect(){
+        try {
+<span class="fc" id="L21">            Class.forName(&quot;com.mysql.jdbc.Driver&quot;).newInstance();</span>
+
+<span class="fc" id="L23">            String name = &quot;gamingbets&quot;;</span>
+<span class="fc" id="L24">            String user = &quot;gameBet&quot;;</span>
+<span class="fc" id="L25">            String password = &quot;gamebet15&quot;;</span>
+
+<span class="fc" id="L27">            Connection con = DriverManager.getConnection(</span>
+                    &quot;jdbc:mysql://localhost/&quot; + name,
+                    user,
+                    password);
+<span class="fc" id="L31">            return con;</span>
+
+        }
+<span class="nc" id="L34">        catch (Exception e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L36">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L38">        return null;</span>
+    }
+//    
+//    public static ArrayList&lt;Ticket&gt; getTickets(){
+//    	Connection con = connect();
+//    	
+//    	Ticket t;
+//    	ArrayList&lt;Ticket&gt; tickets = new ArrayList&lt;Ticket&gt;();
+//    	try{
+//    		String query = &quot;SELECT * FROM 'ticket'&quot;;
+//    		PreparedStatement stmt = con.prepareStatement(query);
+//    		ResultSet rs = stmt.executeQuery();
+//    		while(rs.next()){
+//    			t = new Ticket(rs.getInt(&quot;iD&quot;), rs.getInt(&quot;userID&quot;), rs.getInt(&quot;status&quot;), rs.getDate(&quot;date&quot;), null, rs.getString(&quot;content&quot;));
+//    			tickets.add(t);
+//    		}
+//    		return tickets;
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return null;
+//    }
+//    
+//    /*Ticket Bearbeitungsstatus 
+//     * 0=done
+//     * 1=answered
+//     * 2=pending
+//     */
+//    public static boolean setStatus(int id, int status){
+//    	Connection con = connect();
+//    	
+//    	try{
+//    		String query = &quot;UPDATE 'ticket' SET('status'=?) WHERE 'iD'=?&quot;;
+//    		PreparedStatement stmt = con.prepareStatement(query);
+//    		stmt.setInt(1, status);
+//    		stmt.setInt(2, id);
+//    		
+//    		stmt.executeQuery();
+//    		
+//    		return true;
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	return false;
+//    	
+//    }
+//    
+//    public static ArrayList&lt;User&gt; getScores(){
+//    	Connection con = connect();    	
+//    	User u;
+//    	ArrayList&lt;User&gt; users = new ArrayList&lt;User&gt;();
+//    	
+//    	try{    		
+//	    	
+//	    	String query = &quot;SELECT * FROM 'user' ODER BY 'score'&quot;;	
+//	    	PreparedStatement stmt = con.prepareStatement(query);
+//	    	ResultSet rs = stmt.executeQuery();
+//	    	
+//	    	while(rs.next()){
+//	    		u = new User(rs.getInt(&quot;iD&quot;), rs.getString(&quot;userName&quot;), rs.getString(&quot;email&quot;), rs.getString(&quot;password&quot;), rs.getString(&quot;bets&quot;), rs.getBoolean(&quot;admin&quot;), rs.getBoolean(&quot;active&quot;), rs.getDate(&quot;dob&quot;), rs.getInt(&quot;score&quot;) );
+//	    		users.add(u);
+//	    	}
+//	    	
+//	    	rs.close();
+//	    	stmt.close();
+//	    	con.close();
+//	    	
+//	    	return users;
+//	    	
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return users;
+//    }
+//    
+//    public static boolean postTicket(Ticket ticket){
+//    	Connection con = connect();
+//    	try{
+//    		String query = &quot;INSERT INTO 'ticket' ('userID', 'content') VALUES(?, ?)&quot;;
+//    		PreparedStatement stmt = con.prepareStatement(query);
+//    		stmt.setInt(1, ticket.getID());
+//    		stmt.setString(2, ticket.getContent());
+//    		stmt.executeQuery();
+//    		
+//    		stmt.close();
+//    		con.close();
+//    		
+//    		return true;
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return false;
+//    }
+//    
+//    public static boolean edit(User user){
+//    	Connection con = connect();
+//    	try{
+//    		String query = &quot;UPDATE 'user' SET ('password' = ?, 'email' = ?)WHERE  'userName'= ?&quot;;
+//		    PreparedStatement stmt = con.prepareStatement(query);
+//		    stmt.setString(1, user.getPassword());
+//		    stmt.setString(2, user.getEmail());
+//		    stmt.setString(3, user.getUserName());
+//		    stmt.executeUpdate();
+//		    
+//		    stmt.close();
+//		    con.close();
+//		    
+//    		return true;
+//    		    		
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return false;
+//    }
+//    
+//    public static boolean userExist(String userName){
+//    	
+//    	Connection con = connect();
+//    	try{
+//    		String query = &quot;SELECT 'userName' FROM 'user' WHERE 'userName'=?&quot;;
+//    		PreparedStatement stmt = con.prepareStatement(query);
+//    		stmt.setString(1, userName);
+//    		
+//    		ResultSet rs = stmt.executeQuery();
+//    		if(rs.next()){
+//    			return true;
+//    		}
+//    		
+//    		rs.close();
+//    		stmt.close();
+//    		con.close();
+//    		
+//    		return false;
+//    		
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return false;
+//    }
+//
+//    public static boolean register(UnregisteredUser user){
+//
+//        Connection con = connect();
+//        try {
+//
+//            String query = &quot;INSERT INTO `user` ( `userName`, `password`, `bets`, `loggedIn`, `admin`, `active`, `dob`, `email`, `score`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;
+//            PreparedStatement stmt = con.prepareStatement(query);
+//            stmt.setString(1, user.getUserName());
+//            stmt.setString(2, user.getPassword());
+//            stmt.setString(3, &quot;&quot;);
+//            stmt.setBoolean(4, false);
+//            stmt.setBoolean(5, false);
+//            stmt.setBoolean(6, true);
+//            stmt.setDate(7, user.getDob());
+//            stmt.setString(8, user.getEmail());
+//            stmt.setInt(9, 0);
+//            
+//            stmt.execute();
+//
+//            stmt.close();
+//            con.close();
+//            
+//            return true;
+//
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
+//
+//    public static User getUser(String userName){
+//
+//        int id=0;
+//        String uName = userName;
+//        String password=&quot;&quot;;
+//        String bets=&quot;&quot;;
+//        boolean admin=false;
+//        boolean active=true;
+//        String email=&quot;&quot;;
+//        Date dob = new Date(100);
+//        int score = 0;
+//
+//        Connection con = connect();
+//        try{
+//            
+//            String query = &quot;SELECT * FROM `user` WHERE `userName` = ? &quot;;
+//            PreparedStatement stmt = con.prepareStatement(query);
+//            stmt.setString(1, userName);
+//            
+//            ResultSet rs = stmt.executeQuery();
+//            while (rs.next()){
+//                id = rs.getInt(&quot;iD&quot;);
+//                password = rs.getString(&quot;password&quot;);
+//                bets = rs.getString(&quot;bets&quot;);
+//                admin = rs.getBoolean(&quot;admin&quot;);
+//                active = rs.getBoolean(&quot;active&quot;);
+//                email = rs.getString(&quot;email&quot;);
+//                dob = rs.getDate(&quot;dob&quot;);
+//                score = rs.getInt(&quot;score&quot;);
+//            }
+//            
+//            return new User(id, uName, email, password, bets, admin, active, dob, score );
+//            
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }return null;
+//    }
+//
+//    public static ArrayList&lt;User&gt; getAllUser(){
+//    	Connection con = connect();
+//    	User u;
+//    	ArrayList&lt;User&gt; users = new ArrayList&lt;User&gt;();
+//    	
+//    	try{    		
+//	    	
+//	    	String query = &quot;SELECT * FROM 'user'&quot;;	
+//	    	PreparedStatement stmt = con.prepareStatement(query);
+//	    	
+//	    	ResultSet rs = stmt.executeQuery();	    	
+//	    	while(rs.next()){
+//	    		u = new User(rs.getInt(&quot;iD&quot;), rs.getString(&quot;userName&quot;), rs.getString(&quot;email&quot;), rs.getString(&quot;password&quot;), rs.getString(&quot;bets&quot;), rs.getBoolean(&quot;admin&quot;), rs.getBoolean(&quot;active&quot;), rs.getDate(&quot;dob&quot;), rs.getInt(&quot;score&quot;) );
+//	    		users.add(u);
+//	    	}
+//	    	
+//	    	rs.close();
+//	    	stmt.close();
+//	    	con.close();
+//	    	
+//	    	return users;
+//	    	
+//    	}catch(Exception e){
+//    		e.printStackTrace();
+//    	}
+//    	return users;
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

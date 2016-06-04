@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Sc2Team.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain</a> &gt; <span class="el_source">Sc2Team.java</span></div><h1>Sc2Team.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain;
+
+import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+/**
+ *
+ * @author Andre
+ */
+@Entity
+@Table(name = &quot;sc2_team&quot;)
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = &quot;Sc2Team.findAll&quot;, query = &quot;SELECT s FROM Sc2Team s&quot;),
+    @NamedQuery(name = &quot;Sc2Team.findById&quot;, query = &quot;SELECT s FROM Sc2Team s WHERE s.id = :id&quot;),
+    @NamedQuery(name = &quot;Sc2Team.findByName&quot;, query = &quot;SELECT s FROM Sc2Team s WHERE s.name = :name&quot;),
+    @NamedQuery(name = &quot;Sc2Team.findByLogo&quot;, query = &quot;SELECT s FROM Sc2Team s WHERE s.logo = :logo&quot;)})
+public class Sc2Team implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;id&quot;)
+    private Integer id;
+    @Size(max = 45)
+    @Column(name = &quot;name&quot;)
+    private String name;
+    @Size(max = 45)
+    @Column(name = &quot;logo&quot;)
+    private String logo;
+    @OneToMany(mappedBy = &quot;team&quot;)
+    private Collection&lt;Sc2Player&gt; sc2PlayerCollection;
+    @JoinColumn(name = &quot;nationality&quot;, referencedColumnName = &quot;id&quot;)
+    @ManyToOne
+    private Country nationality;
+
+<span class="nc" id="L58">    public Sc2Team() {</span>
+<span class="nc" id="L59">    }</span>
+
+<span class="nc" id="L61">    public Sc2Team(Integer id) {</span>
+<span class="nc" id="L62">        this.id = id;</span>
+<span class="nc" id="L63">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L66">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L70">        this.id = id;</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getName() {
+<span class="nc" id="L74">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L78">        this.name = name;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getLogo() {
+<span class="nc" id="L82">        return logo;</span>
+    }
+
+    public void setLogo(String logo) {
+<span class="nc" id="L86">        this.logo = logo;</span>
+<span class="nc" id="L87">    }</span>
+
+    @XmlTransient
+    public Collection&lt;Sc2Player&gt; getSc2PlayerCollection() {
+<span class="nc" id="L91">        return sc2PlayerCollection;</span>
+    }
+
+    public void setSc2PlayerCollection(Collection&lt;Sc2Player&gt; sc2PlayerCollection) {
+<span class="nc" id="L95">        this.sc2PlayerCollection = sc2PlayerCollection;</span>
+<span class="nc" id="L96">    }</span>
+
+    public Country getNationality() {
+<span class="nc" id="L99">        return nationality;</span>
+    }
+
+    public void setNationality(Country nationality) {
+<span class="nc" id="L103">        this.nationality = nationality;</span>
+<span class="nc" id="L104">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L108">        int hash = 0;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L110">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (!(object instanceof Sc2Team)) {</span>
+<span class="nc" id="L117">            return false;</span>
+        }
+<span class="nc" id="L119">        Sc2Team other = (Sc2Team) object;</span>
+<span class="nc bnc" id="L120" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L121">            return false;</span>
+        }
+<span class="nc" id="L123">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L128">        return &quot;com.gabmingbets.gamingbetrestserver.domain.Sc2Team[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

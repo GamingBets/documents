@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>CreateBet.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">CreateBet.java</span></div><h1>CreateBet.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import com.gabmingbets.gamingbetrestserver.domain.Sc2Bet;
+import com.gabmingbets.gamingbetrestserver.domain.service.Sc2BetFacadeREST;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+<span class="nc" id="L9">public class CreateBet {</span>
+	
+	public static boolean InsertBet(Sc2Bet bet){
+		/*
+		Connection con = Database.connect();
+		PreparedStatement stmt;
+		
+		String query = &quot;INSERT INTO `gamingbets`.`sc2_bet` (`bet_id`, `user_id`, `betted_result`) VALUES ('&quot;+bet.getAvailable_bet_id()+&quot;', '&quot;+bet.getUser_id()+&quot;', '&quot;+bet.getBetted_result()+&quot;');&quot;; 
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		*/            
+<span class="nc" id="L26">            new Sc2BetFacadeREST().create(bet);</span>
+<span class="nc" id="L27">            return true;</span>
+               
+
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

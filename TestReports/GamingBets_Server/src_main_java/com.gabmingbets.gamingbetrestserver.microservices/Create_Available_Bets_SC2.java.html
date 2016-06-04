@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Create_Available_Bets_SC2.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">Create_Available_Bets_SC2.java</span></div><h1>Create_Available_Bets_SC2.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import com.gabmingbets.gamingbetrestserver.domain.Sc2AvailableBets;
+import com.gabmingbets.gamingbetrestserver.domain.Sc2Matches;
+import com.gabmingbets.gamingbetrestserver.domain.service.Sc2AvailableBetsFacadeREST;
+import com.gabmingbets.gamingbetrestserver.domain.service.Sc2MatchesFacadeREST;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+public class Create_Available_Bets_SC2 {
+
+    @PersistenceContext(unitName = &quot;com.gabmingbets_gamingBetRestServer_war_1.0PU&quot;)
+    private Sc2MatchesFacadeREST facadeMatches;
+	private Date dateOfLastExecute;
+	private Connection con;
+
+<span class="fc" id="L22">	public Create_Available_Bets_SC2() {</span>
+<span class="fc" id="L23">		this.con = Database.connect();</span>
+<span class="fc" id="L24">	}</span>
+
+	public void run() {
+		
+
+        // Get dateOfLastExecute
+
+		// Query for SC2 Matches with bet_created flag = 0
+<span class="fc" id="L32">		String query = createSelectQuery();</span>
+		PreparedStatement stmt;
+		try {
+<span class="fc" id="L35">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L36">			ResultSet rs = stmt.executeQuery();</span>
+<span class="fc" id="L37">			int i = 0;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">			while (rs.next()) {</span>
+				
+<span class="fc" id="L40">				stmt = con.prepareStatement(createInsertQuery(rs.getInt(&quot;id&quot;)));</span>
+<span class="fc" id="L41">				stmt.executeUpdate();</span>
+				
+				
+<span class="fc" id="L44">				stmt = con.prepareStatement(createUpdateQuery(rs.getInt(&quot;id&quot;)));</span>
+<span class="fc" id="L45">				stmt.executeUpdate();</span>
+				
+<span class="fc" id="L47">				i++;</span>
+				
+			}
+<span class="fc" id="L50">		System.out.println(i+&quot; available bets were created!&quot;);</span>
+<span class="nc" id="L51">		} catch (SQLException e) {</span>
+			//TODO Exception Handling
+<span class="nc" id="L53">			e.printStackTrace();</span>
+<span class="fc" id="L54">		}</span>
+		
+               
+		
+		/*
+            TypedQuery&lt;Sc2Matches&gt; query = facadeMatches.getEntityManagerForMicroservices().createNamedQuery(&quot;Sc2Matches.findByBetCreated&quot;, Sc2Matches.class).setParameter(&quot;betCreated&quot;, 0);
+            List&lt;Sc2Matches&gt; matches = new ArrayList();
+            matches = query.getResultList();
+            
+            Query q;
+            for(int i = 0; i&lt;matches.size();i++) {
+                              
+                //q = facadeMatches.createQuery(createInsertQuery(matches.get(i).getId()));
+                //q.executeUpdate();
+            	
+            	Sc2Matches temp = matches.get(i);
+            	temp.setBetCreated(1);
+            	facadeMatches.edit(temp);
+            	
+            	
+            }
+           
+            
+            return matches;
+            
+		 */
+
+<span class="fc" id="L81">	}</span>
+
+	private void resetTimer() {
+<span class="nc" id="L84">		dateOfLastExecute = new Date(System.currentTimeMillis());</span>
+<span class="nc" id="L85">	}</span>
+
+	private Date getDateOfLastExecuteFromDB() {
+<span class="nc" id="L88">		return new Date(System.currentTimeMillis());</span>
+	}
+
+	public String createSelectQuery() {
+<span class="fc" id="L92">            return &quot;SELECT * FROM GamingBets.sc2_matches WHERE bet_created = 0;&quot;;</span>
+                              
+	}
+
+	public String createInsertQuery(int id) {
+<span class="fc" id="L97">		return &quot;INSERT INTO `gamingbets`.`sc2_available_bets` (`match_id`) VALUES ('&quot;+id+&quot;');&quot;;</span>
+
+	}
+
+	public String createUpdateQuery(int id) {
+<span class="fc" id="L102">		return &quot;UPDATE `GamingBets`.`sc2_matches` SET `bet_created`='1' WHERE `id`='&quot;+id+&quot;';&quot;;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

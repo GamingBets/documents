@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Evaluate_Bet_Lol.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">Evaluate_Bet_Lol.java</span></div><h1>Evaluate_Bet_Lol.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+<span class="fc" id="L8">public class Evaluate_Bet_Lol {</span>
+
+	public void run() {
+		String query;
+		PreparedStatement stmt;
+		ResultSet rs;
+<span class="fc" id="L14">		Connection con = Database.connect();</span>
+<span class="fc" id="L15">		int counter = 0;</span>
+		// Check if there are bets which corresponding matches ended but the bets weren�t evaluated!
+		try {
+<span class="fc" id="L18">			query = &quot;SELECT b.idlol_bet, b.betted_result, m.result FROM lol_matches m, lol_bet b, lol_available_bets ab WHERE b.bet_id = ab.idlol_available_bets and ab.match_id = m.idmatches and b.status &lt; 3 and m.result &gt; 0;&quot;;</span>
+<span class="fc" id="L19">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L20">			rs = stmt.executeQuery();</span>
+
+<span class="fc bfc" id="L22" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">				if (rs.getInt(&quot;result&quot;) == rs.getInt(&quot;betted_result&quot;)) {</span>
+<span class="fc" id="L24">					query = &quot;UPDATE `gamingbets`.`lol_bet` SET `status`='3' WHERE `idlol_bet`='&quot;</span>
+<span class="fc" id="L25">							+ rs.getInt(&quot;idlol_bet&quot;) + &quot;';&quot;;</span>
+				} else {
+<span class="fc" id="L27">					query = &quot;UPDATE `gamingbets`.`lol_bet` SET `status`='4' WHERE `idlol_bet`='&quot;</span>
+<span class="fc" id="L28">							+ rs.getInt(&quot;idlol_bet&quot;) + &quot;';&quot;;</span>
+				}
+<span class="fc" id="L30">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L31">				stmt.executeUpdate();</span>
+<span class="fc" id="L32">				counter++;</span>
+			}
+<span class="fc" id="L34">                        stmt.close();</span>
+<span class="fc" id="L35">                        con.close();</span>
+<span class="nc" id="L36">		} catch (SQLException e) {</span>
+
+<span class="fc" id="L38">		}</span>
+<span class="fc" id="L39">		System.out.println(&quot;&quot; + counter + &quot; rows were evaluated!&quot;);</span>
+
+<span class="fc" id="L41">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

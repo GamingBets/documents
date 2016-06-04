@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>UserFacadeREST.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain.service</a> &gt; <span class="el_source">UserFacadeREST.java</span></div><h1>UserFacadeREST.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain.service;
+
+import com.gabmingbets.gamingbetrestserver.domain.User;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+/**
+ *
+ * @author Andre
+ */
+@Stateless
+@Path(&quot;users&quot;)
+public class UserFacadeREST extends AbstractFacade&lt;User&gt; {
+
+    @PersistenceContext(unitName = &quot;com.gabmingbets_gamingBetRestServer_war_1.0PU&quot;)
+    private EntityManager em;
+
+    public UserFacadeREST() {
+<span class="nc" id="L37">        super(User.class);</span>
+<span class="nc" id="L38">    }</span>
+
+    @POST
+    @Override
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void create(User entity) {
+<span class="nc" id="L44">        super.create(entity);</span>
+<span class="nc" id="L45">    }</span>
+
+    @PUT
+    @Path(&quot;{id}&quot;)
+    @Consumes({ MediaType.APPLICATION_JSON})
+    public void edit(@PathParam(&quot;id&quot;) Integer id, User entity) {
+<span class="nc" id="L51">        Query q = em.createQuery(&quot;UPDATE User u SET u.userName = '&quot;+entity.getUserName()+&quot;', u.password='&quot;+entity.getPassword()+&quot;', u.email = '&quot;+entity.getEmail()+&quot;', u.profilePic = &quot; + entity.getProfilePic()+ &quot;, u.unlocks = '&quot;+entity.getUnlocks()+&quot;', u.score=&quot;+entity.getScore()+&quot; WHERE u.id=&quot;+id+&quot;&quot;);</span>
+<span class="nc" id="L52">        q.executeUpdate();</span>
+<span class="nc" id="L53">    }</span>
+    
+    @PUT
+    @Path(&quot;score/{id}&quot;)
+    @Consumes({ MediaType.APPLICATION_JSON})
+    public void editScore(@PathParam(&quot;id&quot;) Integer id, User entity) {
+<span class="nc" id="L59">        Query q = em.createQuery(&quot;UPDATE User u SET u.score = &quot;+entity.getScore()+&quot; WHERE u.id=&quot;+id+&quot;&quot;);</span>
+<span class="nc" id="L60">        q.executeUpdate();</span>
+<span class="nc" id="L61">    }</span>
+    
+    @DELETE
+    @Path(&quot;{id}&quot;)
+    public void remove(@PathParam(&quot;id&quot;) Integer id) {
+<span class="nc" id="L66">        super.remove(super.find(id));</span>
+<span class="nc" id="L67">    }</span>
+
+    @GET
+    @Path(&quot;{id}&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public User find(@PathParam(&quot;id&quot;) Integer id) {
+<span class="nc" id="L73">        return super.find(id);</span>
+    }
+    
+    @GET
+    @Path(&quot;name/{name}&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    public User findByName(@PathParam(&quot;name&quot;) String name){
+<span class="nc" id="L80">        TypedQuery&lt;User&gt; query = getEntityManager().createNamedQuery(&quot;User.findByUserName&quot;, User.class).setParameter(&quot;userName&quot;, name);</span>
+<span class="nc" id="L81">        return query.getSingleResult();</span>
+    }
+    
+    @GET
+    @Path(&quot;getLeaderboard&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List&lt;User&gt; getLeaderboard(){
+<span class="nc" id="L88">        TypedQuery&lt;User&gt; query = getEntityManager().createNamedQuery(&quot;User.getLeaderboard&quot;, User.class);</span>
+<span class="nc" id="L89">        return query.getResultList();</span>
+    }
+
+    @GET
+    @Override
+    @Produces({MediaType.APPLICATION_JSON})
+    public List&lt;User&gt; findAll() {
+<span class="nc" id="L96">        return super.findAll();</span>
+    }
+
+    @GET
+    @Path(&quot;{from}/{to}&quot;)
+    @Produces({MediaType.APPLICATION_JSON})
+    public List&lt;User&gt; findRange(@PathParam(&quot;from&quot;) Integer from, @PathParam(&quot;to&quot;) Integer to) {
+<span class="nc" id="L103">        return super.findRange(new int[]{from, to});</span>
+    }
+
+    @GET
+    @Path(&quot;count&quot;)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String countREST() {
+<span class="nc" id="L110">        return String.valueOf(super.count());</span>
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+<span class="nc" id="L115">        return em;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

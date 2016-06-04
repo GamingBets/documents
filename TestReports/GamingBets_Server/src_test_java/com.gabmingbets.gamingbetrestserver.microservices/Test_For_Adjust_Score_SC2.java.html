@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Test_For_Adjust_Score_SC2.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (02.06.2016 23:27:57)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.microservices</a> &gt; <span class="el_source">Test_For_Adjust_Score_SC2.java</span></div><h1>Test_For_Adjust_Score_SC2.java</h1><pre class="source lang-java linenums">package com.gabmingbets.gamingbetrestserver.microservices;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+<span class="fc" id="L17">public class Test_For_Adjust_Score_SC2 {</span>
+	
+	private static Connection con;
+	
+	@BeforeClass
+	public static void firstInit() {
+<span class="fc" id="L23">		con = Database.connect();</span>
+<span class="fc" id="L24">	}</span>
+
+	@Before
+	public void init() {
+
+		String query;
+		PreparedStatement stmt;
+
+		// Create new Dummy Matches
+
+		try {
+<span class="fc" id="L35">			query = &quot;INSERT INTO `gamingbets`.`sc2_matches` (`result`, `player1`, `player2`, `bet_created`, comment, finished) VALUES ('20', '1', '2', '0', 'debug', 1);&quot;;</span>
+<span class="fc" id="L36">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L37">			stmt.executeUpdate();</span>
+
+<span class="fc" id="L39">			query = &quot;INSERT INTO `gamingbets`.`sc2_matches` (`result`, `player1`, `player2`, `bet_created`, comment, finished) VALUES ('3', '1', '2', '0', 'debug', 1);&quot;;</span>
+<span class="fc" id="L40">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L41">			stmt.executeUpdate();</span>
+
+<span class="pc" id="L43">		} catch (SQLException e) {</span>
+<span class="nc" id="L44">			e.printStackTrace();</span>
+		}
+
+		// Create new Dummy Available Bets
+<span class="fc" id="L48">		query = &quot;SELECT m.id FROM sc2_matches m WHERE m.comment LIKE 'debug'&quot;;</span>
+<span class="fc" id="L49">		int a = 1;</span>
+		ResultSet rs;
+		try {
+<span class="fc" id="L52">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L53">			rs = stmt.executeQuery();</span>
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L56">				a = rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L57">				query = &quot;INSERT INTO sc2_available_bets (match_id) VALUES (&quot; + a + &quot;);&quot;;</span>
+<span class="fc" id="L58">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L59">				stmt.executeUpdate();</span>
+
+<span class="fc" id="L61">				query = &quot;SELECT ab.idsc2_available_bets FROM sc2_available_bets ab WHERE ab.match_id = &quot; + a + &quot;;&quot;;</span>
+				PreparedStatement temp_2;
+<span class="fc" id="L63">				temp_2 = con.prepareStatement(query);</span>
+<span class="fc" id="L64">				ResultSet temp = temp_2.executeQuery();</span>
+<span class="fc" id="L65">				int b = 0;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">				while (temp.next()) {</span>
+<span class="fc" id="L67">					b = temp.getInt(&quot;idsc2_available_bets&quot;);</span>
+				}
+
+				// Create new Dummy Bets
+<span class="fc" id="L71">				query = &quot;INSERT INTO `gamingbets`.`sc2_bet` (`bet_id`, `user_id`, `betted_result`, `status`) VALUES ('&quot;</span>
+<span class="fc" id="L72">						+ b + &quot;', '19', '&quot; + 1 + &quot;', '0');&quot;;</span>
+<span class="fc" id="L73">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L74">				stmt.executeUpdate();</span>
+<span class="fc" id="L75">				query = &quot;INSERT INTO `gamingbets`.`sc2_bet` (`bet_id`, `user_id`, `betted_result`, `status`) VALUES ('&quot;</span>
+<span class="fc" id="L76">						+ b + &quot;', '19', '&quot; + 2 + &quot;', '0');&quot;;</span>
+<span class="fc" id="L77">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L78">				stmt.executeUpdate();</span>
+
+			}
+
+<span class="pc" id="L82">		} catch (SQLException e) {</span>
+<span class="nc" id="L83">			e.printStackTrace();</span>
+		}
+		
+<span class="fc" id="L86">		Evaluate_Bet_SC2 eb = new Evaluate_Bet_SC2();</span>
+<span class="fc" id="L87">		eb.run();		</span>
+
+<span class="fc" id="L89">	}</span>
+
+	@After
+	public void clearUp() {
+		String query;
+		PreparedStatement stmt;
+
+		// clear Bets
+<span class="fc" id="L97">		query = &quot;DELETE FROM `gamingbets`.`sc2_bet` WHERE `user_id`='19'&quot;;</span>
+
+		try {
+<span class="fc" id="L100">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L101">			stmt.executeUpdate();</span>
+
+<span class="pc" id="L103">		} catch (SQLException e) {</span>
+<span class="nc" id="L104">			e.printStackTrace();</span>
+		}
+
+		// clear Available Bets
+
+<span class="fc" id="L109">		query = &quot;SELECT m.id FROM sc2_matches m WHERE m.comment LIKE 'debug'&quot;;</span>
+		ResultSet rs;
+		try {
+<span class="fc" id="L112">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L113">			rs = stmt.executeQuery();</span>
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">			while (rs.next()) {</span>
+
+<span class="fc" id="L117">				query = &quot;DELETE FROM `gamingbets`.`sc2_available_bets` WHERE `match_id`='&quot; + rs.getInt(&quot;id&quot;) + &quot;'&quot;;</span>
+<span class="fc" id="L118">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L119">				stmt.executeUpdate();</span>
+			}
+
+<span class="pc" id="L122">		} catch (SQLException e) {</span>
+<span class="nc" id="L123">			e.printStackTrace();</span>
+		}
+
+		// clear DummyMatches
+<span class="fc" id="L127">		query = &quot;DELETE FROM `gamingbets`.`sc2_matches` WHERE `comment` LIKE 'debug'&quot;;</span>
+		try {
+<span class="fc" id="L129">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L130">			stmt.executeUpdate();</span>
+
+<span class="pc" id="L132">		} catch (SQLException e) {</span>
+<span class="nc" id="L133">			e.printStackTrace();</span>
+		}
+
+<span class="fc" id="L136">	}</span>
+	
+	@Test
+	public void dummyTest(){
+<span class="fc" id="L140">		assertEquals(1,1);</span>
+<span class="fc" id="L141">	}</span>
+	
+
+	@Test
+	public void checkIfAllBetsForFinishedMatchesWereProcessed() {
+
+<span class="fc" id="L147">		String query = &quot;SELECT b.idsc2_bet, b.processed FROM gamingbets.sc2_bet b, sc2_available_bets ab, sc2_matches m WHERE b.bet_id = ab.idsc2_available_bets and ab.match_id = m.id and m.result != 0 and m.comment = 'debug' and b.processed = 0;&quot;;</span>
+		PreparedStatement stmt;
+		ResultSet rs;
+<span class="fc" id="L150">		ArrayList&lt;Integer&gt; bets = new ArrayList&lt;Integer&gt;();</span>
+		try {
+<span class="fc" id="L152">			stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L153">			rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L155">				bets.add(rs.getInt(&quot;idsc2_bet&quot;));</span>
+			}
+
+<span class="pc" id="L158">		} catch (SQLException e) {</span>
+<span class="nc" id="L159">			e.printStackTrace();</span>
+		}
+
+<span class="fc" id="L162">		MicroserviceHandler.adjustScoreSC2();</span>
+
+<span class="fc bfc" id="L164" title="All 2 branches covered.">		for (int i = 0; i &lt; bets.size(); i++) {</span>
+			try {
+<span class="fc" id="L166">				query = &quot;SELECT b.idsc2_bet, b.processed FROM sc2_bet b WHERE b.idsc2_bet = &quot; + bets.get(i) + &quot;;&quot;;</span>
+<span class="fc" id="L167">				stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L168">				rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">				while (rs.next()) {</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">					if (rs.getInt(&quot;processed&quot;) == 0) {</span>
+<span class="nc" id="L171">						String failmessage = &quot;At least one Bet was not evaluated!&quot;;</span>
+<span class="nc" id="L172">						fail(failmessage);</span>
+					}
+				}
+<span class="pc" id="L175">			} catch (SQLException e) {</span>
+<span class="nc" id="L176">				e.printStackTrace();</span>
+			}
+		}
+<span class="fc" id="L179">	}</span>
+
+	@Test
+	public void checkIfScoreAdjustmentIsCorrect() {
+		
+<span class="fc" id="L184">		int score_before = 0;</span>
+<span class="fc" id="L185">		int score_after = 1;</span>
+		
+		try {
+<span class="fc" id="L188">			String query = &quot;SELECT * FROM gamingbets.user u WHERE iD = 19;&quot;;</span>
+<span class="fc" id="L189">			PreparedStatement stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L190">			ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L192">				score_before = rs.getInt(&quot;score&quot;);</span>
+			}
+<span class="pc" id="L194">		} catch (SQLException e) {</span>
+
+		}
+		
+<span class="fc" id="L198">		MicroserviceHandler.adjustScoreSC2();</span>
+		
+		try {
+<span class="fc" id="L201">			String query = &quot;SELECT * FROM gamingbets.user u WHERE iD = 19;&quot;;</span>
+<span class="fc" id="L202">			PreparedStatement stmt = con.prepareStatement(query);</span>
+<span class="fc" id="L203">			ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L205">				score_after = rs.getInt(&quot;score&quot;);</span>
+			}
+<span class="pc" id="L207">		} catch (SQLException e) {</span>
+
+		}
+		
+<span class="fc" id="L211">		assertEquals(score_before+20, score_after);</span>
+<span class="fc" id="L212">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (02.06.2016 23:27:57)</div></body></html>

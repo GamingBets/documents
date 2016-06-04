@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Sc2Matches.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain</a> &gt; <span class="el_source">Sc2Matches.java</span></div><h1>Sc2Matches.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain;
+
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author Andre
+ */
+@Entity
+@Table(name = &quot;sc2_matches&quot;)
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = &quot;Sc2Matches.findAll&quot;, query = &quot;SELECT s FROM Sc2Matches s&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findById&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.id = :id&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findByResult&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.result = :result&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findByDate&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.date = :date&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findByComment&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.comment = :comment&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findByBetCreated&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.betCreated = :betCreated&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findNewsFeed&quot;, query = &quot;SELECT s FROM Sc2Matches s ORDER BY s.lastUpdated DESC&quot;),
+    @NamedQuery(name = &quot;Sc2Matches.findByFinished&quot;, query = &quot;SELECT s FROM Sc2Matches s WHERE s.finished = :finished&quot;)})
+public class Sc2Matches implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;id&quot;)
+    private Integer id;
+    @Column(name = &quot;result&quot;)
+    private Integer result;
+    @Column(name = &quot;date&quot;)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+    @Size(max = 45)
+    @Column(name = &quot;comment&quot;)
+    private String comment;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;bet_created&quot;)
+    private int betCreated;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;last_updated&quot;)
+    private long lastUpdated;    
+    @Column(name = &quot;finished&quot;)
+    private Integer finished;
+    @JoinColumn(name = &quot;type&quot;, referencedColumnName = &quot;idGameTyp&quot;)
+    @ManyToOne
+    private Gametyp type;
+    @JoinColumn(name = &quot;player1&quot;, referencedColumnName = &quot;id&quot;)
+    @ManyToOne
+    private Sc2Player player1;
+    @JoinColumn(name = &quot;player2&quot;, referencedColumnName = &quot;id&quot;)
+    @ManyToOne
+    private Sc2Player player2;
+    @JoinColumn(name = &quot;tournament_id&quot;, referencedColumnName = &quot;idtournament&quot;)
+    @ManyToOne
+    private Sc2Tournament tournamentId;
+
+<span class="nc" id="L82">    public Sc2Matches() {</span>
+<span class="nc" id="L83">    }</span>
+
+    
+    public long getlastUpdated() {
+<span class="nc" id="L87">		return lastUpdated;</span>
+	}
+
+	public void setlastUpdated(long lastUpdated) {
+<span class="nc" id="L91">		this.lastUpdated = lastUpdated;</span>
+<span class="nc" id="L92">	}</span>
+
+<span class="nc" id="L94">	public Sc2Matches(Integer id) {</span>
+<span class="nc" id="L95">        this.id = id;</span>
+<span class="nc" id="L96">    }</span>
+
+<span class="nc" id="L98">    public Sc2Matches(Integer id, int betCreated) {</span>
+<span class="nc" id="L99">        this.id = id;</span>
+<span class="nc" id="L100">        this.betCreated = betCreated;</span>
+<span class="nc" id="L101">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L104">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L108">        this.id = id;</span>
+<span class="nc" id="L109">    }</span>
+
+    public Integer getResult() {
+<span class="nc" id="L112">        return result;</span>
+    }
+
+    public void setResult(Integer result) {
+<span class="nc" id="L116">        this.result = result;</span>
+<span class="nc" id="L117">    }</span>
+
+    public Date getDate() {
+<span class="nc" id="L120">        return date;</span>
+    }
+
+    public void setDate(Date date) {
+<span class="nc" id="L124">        this.date = date;</span>
+<span class="nc" id="L125">    }</span>
+
+    public String getComment() {
+<span class="nc" id="L128">        return comment;</span>
+    }
+
+    public void setComment(String comment) {
+<span class="nc" id="L132">        this.comment = comment;</span>
+<span class="nc" id="L133">    }</span>
+
+    public int getBetCreated() {
+<span class="nc" id="L136">        return betCreated;</span>
+    }
+
+    public void setBetCreated(int betCreated) {
+<span class="nc" id="L140">        this.betCreated = betCreated;</span>
+<span class="nc" id="L141">    }</span>
+
+    public Integer getFinished() {
+<span class="nc" id="L144">        return finished;</span>
+    }
+
+    public void setFinished(Integer finished) {
+<span class="nc" id="L148">        this.finished = finished;</span>
+<span class="nc" id="L149">    }</span>
+
+    public Gametyp getType() {
+<span class="nc" id="L152">        return type;</span>
+    }
+
+    public void setType(Gametyp type) {
+<span class="nc" id="L156">        this.type = type;</span>
+<span class="nc" id="L157">    }</span>
+
+    public Sc2Player getPlayer1() {
+<span class="nc" id="L160">        return player1;</span>
+    }
+
+    public void setPlayer1(Sc2Player player1) {
+<span class="nc" id="L164">        this.player1 = player1;</span>
+<span class="nc" id="L165">    }</span>
+
+    public Sc2Player getPlayer2() {
+<span class="nc" id="L168">        return player2;</span>
+    }
+
+    public void setPlayer2(Sc2Player player2) {
+<span class="nc" id="L172">        this.player2 = player2;</span>
+<span class="nc" id="L173">    }</span>
+
+    public Sc2Tournament getTournamentId() {
+<span class="nc" id="L176">        return tournamentId;</span>
+    }
+
+    public void setTournamentId(Sc2Tournament tournamentId) {
+<span class="nc" id="L180">        this.tournamentId = tournamentId;</span>
+<span class="nc" id="L181">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L185">        int hash = 0;</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L187">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (!(object instanceof Sc2Matches)) {</span>
+<span class="nc" id="L194">            return false;</span>
+        }
+<span class="nc" id="L196">        Sc2Matches other = (Sc2Matches) object;</span>
+<span class="nc bnc" id="L197" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L198">            return false;</span>
+        }
+<span class="nc" id="L200">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L205">        return &quot;com.gabmingbets.gamingbetrestserver.domain.Sc2Matches[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>

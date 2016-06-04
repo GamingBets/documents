@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Sc2AvailableBets.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">All_Tests (1) (03.06.2016 23:02:07)</a> &gt; <a href="../../index.html" class="el_group">GamingBets Server</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.gabmingbets.gamingbetrestserver.domain</a> &gt; <span class="el_source">Sc2AvailableBets.java</span></div><h1>Sc2AvailableBets.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gabmingbets.gamingbetrestserver.domain;
+
+import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+/**
+ *
+ * @author Andre
+ */
+@Entity
+@Table(name = &quot;sc2_available_bets&quot;)
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = &quot;Sc2AvailableBets.findAll&quot;, query = &quot;SELECT s FROM Sc2AvailableBets s&quot;),
+    @NamedQuery(name = &quot;Sc2AvailableBets.findAllNotFinished&quot;, query = &quot;SELECT s FROM Sc2AvailableBets s, Sc2Matches m WHERE m.finished = 0 and s.matchId.id = m.id and m.tournamentId.idtournament = :idtournament&quot;),
+    @NamedQuery(name = &quot;Sc2AvailableBets.findByIdsc2AvailableBets&quot;, query = &quot;SELECT s FROM Sc2AvailableBets s WHERE s.idsc2AvailableBets = :idsc2AvailableBets&quot;)})
+public class Sc2AvailableBets implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = &quot;idsc2_available_bets&quot;)
+    private Integer idsc2AvailableBets;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;betId&quot;)
+    private Collection&lt;Sc2Bet&gt; sc2BetCollection;
+
+    @JoinColumn(name = &quot;match_id&quot;, referencedColumnName = &quot;id&quot;)
+    @ManyToOne(optional = false)
+    private Sc2Matches matchId;
+    
+<span class="nc" id="L52">    public Sc2AvailableBets() {</span>
+<span class="nc" id="L53">    }</span>
+
+    public Sc2Matches getMatchId() {
+<span class="nc" id="L56">        return matchId;</span>
+    }
+
+    public void setMatchId(Sc2Matches matchId) {
+<span class="nc" id="L60">        this.matchId = matchId;</span>
+<span class="nc" id="L61">    }</span>
+
+   
+    
+<span class="nc" id="L65">    public Sc2AvailableBets(Integer idsc2AvailableBets) {</span>
+<span class="nc" id="L66">        this.idsc2AvailableBets = idsc2AvailableBets;</span>
+<span class="nc" id="L67">    }</span>
+
+    public Integer getIdsc2AvailableBets() {
+<span class="nc" id="L70">        return idsc2AvailableBets;</span>
+    }
+
+    public void setIdsc2AvailableBets(Integer idsc2AvailableBets) {
+<span class="nc" id="L74">        this.idsc2AvailableBets = idsc2AvailableBets;</span>
+<span class="nc" id="L75">    }</span>
+
+    @XmlTransient
+    public Collection&lt;Sc2Bet&gt; getSc2BetCollection() {
+<span class="nc" id="L79">        return sc2BetCollection;</span>
+    }
+
+    public void setSc2BetCollection(Collection&lt;Sc2Bet&gt; sc2BetCollection) {
+<span class="nc" id="L83">        this.sc2BetCollection = sc2BetCollection;</span>
+<span class="nc" id="L84">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L88">        int hash = 0;</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        hash += (idsc2AvailableBets != null ? idsc2AvailableBets.hashCode() : 0);</span>
+<span class="nc" id="L90">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (!(object instanceof Sc2AvailableBets)) {</span>
+<span class="nc" id="L97">            return false;</span>
+        }
+<span class="nc" id="L99">        Sc2AvailableBets other = (Sc2AvailableBets) object;</span>
+<span class="nc bnc" id="L100" title="All 8 branches missed.">        if ((this.idsc2AvailableBets == null &amp;&amp; other.idsc2AvailableBets != null) || (this.idsc2AvailableBets != null &amp;&amp; !this.idsc2AvailableBets.equals(other.idsc2AvailableBets))) {</span>
+<span class="nc" id="L101">            return false;</span>
+        }
+<span class="nc" id="L103">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L108">        return &quot;com.gabmingbets.gamingbetrestserver.domain.Sc2AvailableBets[ idsc2AvailableBets=&quot; + idsc2AvailableBets + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span>All_Tests (1) (03.06.2016 23:02:07)</div></body></html>
